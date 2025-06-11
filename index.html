@@ -1,0 +1,688 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Filosofia Antiga e Medieval</title>
+    <style>
+        :root {
+            --primary-color: #3498db;
+            --secondary-color: #2ecc71;
+            --dark-color: #2c3e50;
+            --light-color: #ecf0f1;
+            --correct-color: #27ae60;
+            --incorrect-color: #e74c3c;
+            --shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            --transition: all 0.3s ease;
+        }
+        
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            background-color: #f5f7fa;
+            color: #333;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: var(--shadow);
+            overflow: hidden;
+        }
+        
+        header {
+            background: linear-gradient(135deg, var(--dark-color), var(--primary-color));
+            color: white;
+            padding: 30px 20px;
+            text-align: center;
+        }
+        
+        h1 {
+            font-size: 2.2rem;
+            margin-bottom: 10px;
+        }
+        
+        .subtitle {
+            font-size: 1.1rem;
+            opacity: 0.9;
+        }
+        
+        .buttons {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            padding: 20px;
+            background-color: white;
+            border-bottom: 1px solid #eee;
+        }
+        
+        button {
+            padding: 12px 30px;
+            font-size: 1rem;
+            font-weight: 600;
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: var(--transition);
+            box-shadow: var(--shadow);
+        }
+        
+        #quizBtn {
+            background-color: var(--primary-color);
+            color: white;
+        }
+        
+        #quizBtn:hover {
+            background-color: #2980b9;
+            transform: translateY(-2px);
+        }
+        
+        #summaryBtn {
+            background-color: var(--secondary-color);
+            color: white;
+        }
+        
+        #summaryBtn:hover {
+            background-color: #27ae60;
+            transform: translateY(-2px);
+        }
+        
+        .active-btn {
+            transform: scale(1.05);
+            box-shadow: 0 0 15px rgba(0,0,0,0.2);
+        }
+        
+        .content {
+            display: none;
+            padding: 30px;
+        }
+        
+        .active-content {
+            display: block;
+            animation: fadeIn 0.5s ease;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        h2 {
+            color: var(--dark-color);
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #eee;
+        }
+        
+        h3 {
+            color: var(--primary-color);
+            margin: 25px 0 15px;
+        }
+        
+        ul {
+            padding-left: 20px;
+        }
+        
+        li {
+            margin-bottom: 10px;
+            line-height: 1.7;
+        }
+        
+        .section {
+            margin-bottom: 30px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .section:last-child {
+            border-bottom: none;
+        }
+        
+        /* Quiz Styles */
+        .question-counter {
+            background-color: var(--light-color);
+            padding: 10px 15px;
+            border-radius: 50px;
+            font-weight: bold;
+            margin-bottom: 20px;
+            display: inline-block;
+        }
+        
+        .question {
+            background-color: white;
+            padding: 25px;
+            margin-bottom: 25px;
+            border-radius: 8px;
+            box-shadow: var(--shadow);
+            transition: var(--transition);
+        }
+        
+        .question:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 12px rgba(0,0,0,0.1);
+        }
+        
+        .question-text {
+            font-size: 1.1rem;
+            font-weight: 500;
+            margin-bottom: 20px;
+        }
+        
+        .options {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 10px;
+        }
+        
+        .option {
+            padding: 12px 15px;
+            border-radius: 6px;
+            background-color: var(--light-color);
+            cursor: pointer;
+            transition: var(--transition);
+            border-left: 4px solid transparent;
+        }
+        
+        .option:hover {
+            background-color: #dfe6e9;
+            border-left-color: var(--primary-color);
+        }
+        
+        .correct {
+            background-color: rgba(39, 174, 96, 0.2);
+            border-left-color: var(--correct-color);
+            color: var(--correct-color);
+            font-weight: bold;
+        }
+        
+        .incorrect {
+            background-color: rgba(231, 76, 60, 0.1);
+            border-left-color: var(--incorrect-color);
+            color: var(--incorrect-color);
+        }
+        
+        .explanation {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.5s ease;
+            margin-top: 15px;
+            background-color: rgba(52, 152, 219, 0.1);
+            border-radius: 6px;
+        }
+        
+        .explanation-content {
+            padding: 15px;
+        }
+        
+        .explanation.show {
+            max-height: 300px;
+        }
+        
+        .correct-answer {
+            color: var(--correct-color);
+            font-weight: bold;
+        }
+        
+        .explanation-text {
+            margin-top: 10px;
+        }
+        
+        @media (max-width: 768px) {
+            .buttons {
+                flex-direction: column;
+                gap: 10px;
+            }
+            
+            button {
+                width: 100%;
+            }
+            
+            .content {
+                padding: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Filosofia Antiga e Medieval</h1>
+            <p class="subtitle">Explore o conhecimento filosófico através de resumos e testes</p>
+        </header>
+        
+        <div class="buttons">
+            <button id="summaryBtn" class="active-btn">Resumo Completo</button>
+            <button id="quizBtn">Quiz de Filosofia</button>
+        </div>
+        
+        <div id="summaryContent" class="content active-content">
+            <h2>📚 Resumo Completo e Organizado</h2>
+            
+            <div class="section">
+                <h3>1. Filosofia Antiga</h3>
+                <ul>
+                    <li><strong>Pré-Socráticos</strong>: Primeiros filósofos que buscavam o princípio (arché) de todas as coisas (Tales, Anaximandro, Heráclito, Parmênides).</li>
+                    <li><strong>Sócrates</strong>: Método da maiêutica, "Só sei que nada sei", condenado à morte em 399 a.C.</li>
+                    <li><strong>Platão</strong>: Teoria das Ideias, mundo sensível x mundo inteligível, obra principal "A República".</li>
+                    <li><strong>Aristóteles</strong>: Lógica, ética virtuosa, "O homem é um animal político", fundador do Liceu.</li>
+                </ul>
+            </div>
+            
+            <div class="section">
+                <h3>2. Filosofia Helenística</h3>
+                <ul>
+                    <li><strong>Estoicismo</strong>: Zenão de Cítio, aceitação do destino, controle das emoções.</li>
+                    <li><strong>Epicurismo</strong>: Epicuro, busca do prazer moderado, "ataraxia" (ausência de perturbação).</li>
+                    <li><strong>Ceticismo</strong>: Pirro, suspensão do juízo para alcançar a tranquilidade.</li>
+                </ul>
+            </div>
+            
+            <div class="section">
+                <h3>3. Filosofia Medieval</h3>
+                <ul>
+                    <li><strong>Santo Agostinho</strong>: Fé e razão, "Creio para entender", teoria da iluminação divina.</li>
+                    <li><strong>Escolástica</strong>: Razão a serviço da fé, método disputatio.</li>
+                    <li><strong>São Tomás de Aquino</strong>: Síntese entre fé e razão, cinco vias para provar Deus, influência aristotélica.</li>
+                    <li><strong>Guilherme de Ockham</strong>: Navalha de Ockham ("pluralitas non est ponenda sine necessitate").</li>
+                </ul>
+            </div>
+            
+            <div class="section">
+                <h3>4. Principais Conceitos</h3>
+                <ul>
+                    <li><strong>Metafísica</strong>: Estudo do ser enquanto ser.</li>
+                    <li><strong>Ética</strong>: Estudo dos valores morais e do bom viver.</li>
+                    <li><strong>Epistemologia</strong>: Teoria do conhecimento.</li>
+                    <li><strong>Lógica</strong>: Estudo dos princípios do raciocínio válido.</li>
+                </ul>
+            </div>
+        </div>
+        
+        <div id="quizContent" class="content">
+            <h2>🧠 Quiz de Filosofia</h2>
+            <div class="question-counter">20 questões</div>
+            
+            <div class="question" data-correct="A">
+                <div class="question-text">1. Qual filósofo é conhecido pelo método da maiêutica?</div>
+                <div class="options">
+                    <div class="option">A) Sócrates</div>
+                    <div class="option">B) Platão</div>
+                    <div class="option">C) Aristóteles</div>
+                    <div class="option">D) Descartes</div>
+                </div>
+                <div class="explanation">
+                    <div class="explanation-content">
+                        <p><span class="correct-answer">Resposta correta: A) Sócrates</span> ✅</p>
+                        <p class="explanation-text">Sócrates desenvolveu o método da maiêutica (que significa "parto" em grego), que consistia em fazer perguntas para ajudar o interlocutor a "dar à luz" suas próprias ideias e verdades. Essa técnica era parte de seu método dialético de investigação filosófica.</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="question" data-correct="B">
+                <div class="question-text">2. Qual é a obra principal de Platão que descreve sua teoria das Ideias?</div>
+                <div class="options">
+                    <div class="option">A) Ética a Nicômaco</div>
+                    <div class="option">B) A República</div>
+                    <div class="option">C) Meditações</div>
+                    <div class="option">D) Crítica da Razão Pura</div>
+                </div>
+                <div class="explanation">
+                    <div class="explanation-content">
+                        <p><span class="correct-answer">Resposta correta: B) A República</span> ✅</p>
+                        <p class="explanation-text">Em "A República", Platão apresenta sua teoria das Ideias, onde o mundo sensível é apenas uma cópia imperfeita do mundo das Ideias perfeitas e eternas. A obra também aborda sua concepção de Estado ideal e a alegoria da caverna.</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="question" data-correct="C">
+                <div class="question-text">3. Qual filósofo medieval propôs as "cinco vias" para demonstrar a existência de Deus?</div>
+                <div class="options">
+                    <div class="option">A) Santo Agostinho</div>
+                    <div class="option">B) Averróis</div>
+                    <div class="option">C) São Tomás de Aquino</div>
+                    <div class="option">D) Guilherme de Ockham</div>
+                </div>
+                <div class="explanation">
+                    <div class="explanation-content">
+                        <p><span class="correct-answer">Resposta correta: C) São Tomás de Aquino</span> ✅</p>
+                        <p class="explanation-text">Tomás de Aquino, na Suma Teológica, apresentou cinco argumentos racionais (as cinco vias) para provar a existência de Deus, combinando filosofia aristotélica com teologia cristã. As vias são: 1) via do movimento, 2) via da causa eficiente, 3) via da contingência, 4) via dos graus de perfeição e 5) via da finalidade.</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="question" data-correct="D">
+                <div class="question-text">4. Qual destes filósofos é considerado o principal representante do Estoicismo?</div>
+                <div class="options">
+                    <div class="option">A) Epicuro</div>
+                    <div class="option">B) Pirro</div>
+                    <div class="option">C) Diógenes</div>
+                    <div class="option">D) Zenão de Cítio</div>
+                </div>
+                <div class="explanation">
+                    <div class="explanation-content">
+                        <p><span class="correct-answer">Resposta correta: D) Zenão de Cítio</span> ✅</p>
+                        <p class="explanation-text">Zenão de Cítio (334-262 a.C.) foi o fundador da escola estoica em Atenas. O estoicismo pregava a aceitação racional do destino, o controle das paixões e a vivência de acordo com a natureza. Outros estoicos importantes foram Sêneca, Epicteto e Marco Aurélio.</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="question" data-correct="A">
+                <div class="question-text">5. O que significa o termo "ataraxia" na filosofia epicurista?</div>
+                <div class="options">
+                    <div class="option">A) Ausência de perturbação</div>
+                    <div class="option">B) Busca do prazer imediato</div>
+                    <div class="option">C) Conhecimento absoluto</div>
+                    <div class="option">D) Virtude heroica</div>
+                </div>
+                <div class="explanation">
+                    <div class="explanation-content">
+                        <p><span class="correct-answer">Resposta correta: A) Ausência de perturbação</span> ✅</p>
+                        <p class="explanation-text">A ataraxia (do grego "αταραξία") significa ausência de perturbação, serenidade de espírito. Para Epicuro, era o estado ideal a ser alcançado através da moderação dos prazeres e da eliminação dos medos irracionais, especialmente o medo dos deuses e da morte.</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="question" data-correct="B">
+                <div class="question-text">6. Qual destes conceitos é central na filosofia de Aristóteles?</div>
+                <div class="options">
+                    <div class="option">A) Mundo das Ideias</div>
+                    <div class="option">B) Justo meio</div>
+                    <div class="option">C) Dúvida metódica</div>
+                    <div class="option">D) Imperativo categórico</div>
+                </div>
+                <div class="explanation">
+                    <div class="explanation-content">
+                        <p><span class="correct-answer">Resposta correta: B) Justo meio</span> ✅</p>
+                        <p class="explanation-text">Aristóteles defendia que a virtude está no justo meio (mesotés) entre os extremos. Por exemplo, a coragem é o meio entre a covardia e a temeridade. Esse conceito é central em sua ética apresentada na obra "Ética a Nicômaco".</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="question" data-correct="C">
+                <div class="question-text">7. Qual destas afirmações melhor representa o pensamento de Heráclito?</div>
+                <div class="options">
+                    <div class="option">A) "Tudo é um e imutável"</div>
+                    <div class="option">B) "O ser é e o não-ser não é"</div>
+                    <div class="option">C) "Ninguém se banha duas vezes no mesmo rio"</div>
+                    <div class="option">D) "Conhece-te a ti mesmo"</div>
+                </div>
+                <div class="explanation">
+                    <div class="explanation-content">
+                        <p><span class="correct-answer">Resposta correta: C) "Ninguém se banha duas vezes no mesmo rio"</span> ✅</p>
+                        <p class="explanation-text">Heráclito de Éfeso (535-475 a.C.) é conhecido por sua filosofia do devir (tudo flui). A frase ilustra seu pensamento de que a realidade está em constante mudança - o rio já não é o mesmo porque suas águas mudaram, e a pessoa também já não é a mesma.</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="question" data-correct="A">
+                <div class="question-text">8. Qual destes filósofos é associado à "Alegoria da Caverna"?</div>
+                <div class="options">
+                    <div class="option">A) Platão</div>
+                    <div class="option">B) Aristóteles</div>
+                    <div class="option">C) Sócrates</div>
+                    <div class="option">D) Pitágoras</div>
+                </div>
+                <div class="explanation">
+                    <div class="explanation-content">
+                        <p><span class="correct-answer">Resposta correta: A) Platão</span> ✅</p>
+                        <p class="explanation-text">A Alegoria da Caverna é uma metáfora apresentada por Platão em "A República" (Livro VII) para ilustrar seu conceito de realidade. Os prisioneiros na caverna representam a humanidade, que toma as sombras por realidade, até que um filósofo (o que se liberta) descobre o mundo verdadeiro das Ideias.</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="question" data-correct="D">
+                <div class="question-text">9. O que significa a "Navalha de Ockham"?</div>
+                <div class="options">
+                    <div class="option">A) A teoria das ideias inatas</div>
+                    <div class="option">B) O método socrático de questionamento</div>
+                    <div class="option">C) A divisão platônica entre corpo e alma</div>
+                    <div class="option">D) O princípio da simplicidade nas explicações</div>
+                </div>
+                <div class="explanation">
+                    <div class="explanation-content">
+                        <p><span class="correct-answer">Resposta correta: D) O princípio da simplicidade nas explicações</span> ✅</p>
+                        <p class="explanation-text">A Navalha de Ockham (ou princípio da parcimônia) é um princípio metodológico atribuído ao franciscano Guilherme de Ockham (século XIV) que afirma que, entre explicações igualmente válidas, a mais simples tende a ser a correta ("pluralitas non est ponenda sine necessitate" - a pluralidade não deve ser posta sem necessidade).</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="question" data-correct="B">
+                <div class="question-text">10. Qual destes filósofos é considerado o "pai da filosofia ocidental"?</div>
+                <div class="options">
+                    <div class="option">A) Aristóteles</div>
+                    <div class="option">B) Tales de Mileto</div>
+                    <div class="option">C) Platão</div>
+                    <div class="option">D) Pitágoras</div>
+                </div>
+                <div class="explanation">
+                    <div class="explanation-content">
+                        <p><span class="correct-answer">Resposta correta: B) Tales de Mileto</span> ✅</p>
+                        <p class="explanation-text">Tales de Mileto (624-546 a.C.) é tradicionalmente considerado o primeiro filósofo ocidental e um dos Sete Sábios da Grécia. Ele inaugurou a filosofia ao buscar uma explicação racional (em vez de mítica) para a origem do universo, propondo que a água era o princípio (arché) de todas as coisas.</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="question" data-correct="A">
+                <div class="question-text">11. Qual era a principal característica da filosofia de Parmênides?</div>
+                <div class="options">
+                    <div class="option">A) A imutabilidade do ser</div>
+                    <div class="option">B) O fluxo permanente da realidade</div>
+                    <div class="option">C) A teoria dos quatro elementos</div>
+                    <div class="option">D) O relativismo moral</div>
+                </div>
+                <div class="explanation">
+                    <div class="explanation-content">
+                        <p><span class="correct-answer">Resposta correta: A) A imutabilidade do ser</span> ✅</p>
+                        <p class="explanation-text">Parmênides defendia que o ser é uno, imutável e eterno, em oposição à filosofia de Heráclito que pregava o constante fluxo da realidade. Para Parmênides, a mudança era apenas uma ilusão dos sentidos.</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="question" data-correct="B">
+                <div class="question-text">12. Qual era o principal objetivo da Academia fundada por Platão?</div>
+                <div class="options">
+                    <div class="option">A) Treinar atletas para os Jogos Olímpicos</div>
+                    <div class="option">B) Desenvolver o conhecimento filosófico e formar governantes</div>
+                    <div class="option">C) Preparar soldados para o exército ateniense</div>
+                    <div class="option">D) Produzir obras de arte e esculturas</div>
+                </div>
+                <div class="explanation">
+                    <div class="explanation-content">
+                        <p><span class="correct-answer">Resposta correta: B) Desenvolver o conhecimento filosófico e formar governantes</span> ✅</p>
+                        <p class="explanation-text">A Academia de Platão, fundada por volta de 387 a.C., tinha como objetivo principal o estudo da filosofia e a formação de governantes-filósofos, conforme proposto em "A República". Funcionou por mais de 900 anos como centro de aprendizado.</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="question" data-correct="C">
+                <div class="question-text">13. Qual destes conceitos é central na ética aristotélica?</div>
+                <div class="options">
+                    <div class="option">A) Mundo das Ideias</div>
+                    <div class="option">B) Dúvida metódica</div>
+                    <div class="option">C) Eudaimonia (felicidade/florescimento humano)</div>
+                    <div class="option">D) Imperativo categórico</div>
+                </div>
+                <div class="explanation">
+                    <div class="explanation-content">
+                        <p><span class="correct-answer">Resposta correta: C) Eudaimonia (felicidade/florescimento humano)</span> ✅</p>
+                        <p class="explanation-text">Para Aristóteles, a eudaimonia (traduzida como felicidade ou florescimento humano) era o fim último da vida humana, alcançada através do exercício da virtude e da razão. Esse conceito é central em sua obra "Ética a Nicômaco".</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="question" data-correct="D">
+                <div class="question-text">14. Qual destes filósofos medievais defendia que "a fé deve preceder a razão"?</div>
+                <div class="options">
+                    <div class="option">A) São Tomás de Aquino</div>
+                    <div class="option">B) Averróis</div>
+                    <div class="option">C) Guilherme de Ockham</div>
+                    <div class="option">D) Santo Agostinho</div>
+                </div>
+                <div class="explanation">
+                    <div class="explanation-content">
+                        <p><span class="correct-answer">Resposta correta: D) Santo Agostinho</span> ✅</p>
+                        <p class="explanation-text">Santo Agostinho (354-430) defendia a primazia da fé sobre a razão, expressa na frase "Creio para entender". Ele acreditava que a verdade plena só poderia ser alcançada através da iluminação divina, embora não rejeitasse completamente o uso da razão.</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="question" data-correct="A">
+                <div class="question-text">15. Qual era o principal método de ensino utilizado nas universidades medievais?</div>
+                <div class="options">
+                    <div class="option">A) Disputatio (disputa dialética)</div>
+                    <div class="option">B) Experimentação científica</div>
+                    <div class="option">C) Meditação silenciosa</div>
+                    <div class="option">D) Aprendizado por observação</div>
+                </div>
+                <div class="explanation">
+                    <div class="explanation-content">
+                        <p><span class="correct-answer">Resposta correta: A) Disputatio (disputa dialética)</span> ✅</p>
+                        <p class="explanation-text">O método da disputatio consistia em debates estruturados onde estudantes e mestres discutiam questões filosóficas e teológicas, apresentando argumentos e contra-argumentos. Era o principal método pedagógico da escolástica medieval.</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="question" data-correct="B">
+                <div class="question-text">16. Qual destes filósofos pré-socráticos propôs que o "arché" (princípio fundamental) era o fogo?</div>
+                <div class="options">
+                    <div class="option">A) Tales de Mileto</div>
+                    <div class="option">B) Heráclito</div>
+                    <div class="option">C) Anaxímenes</div>
+                    <div class="option">D) Pitágoras</div>
+                </div>
+                <div class="explanation">
+                    <div class="explanation-content">
+                        <p><span class="correct-answer">Resposta correta: B) Heráclito</span> ✅</p>
+                        <p class="explanation-text">Heráclito de Éfeso (535-475 a.C.) considerava o fogo como o elemento primordial, simbolizando a constante mudança que caracteriza a realidade. Sua famosa frase "Tudo flui" (Panta rhei) expressa essa visão de um universo em permanente transformação.</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="question" data-correct="C">
+                <div class="question-text">17. Qual destas obras foi escrita por Aristóteles?</div>
+                <div class="options">
+                    <div class="option">A) A República</div>
+                    <div class="option">B) Meditações</div>
+                    <div class="option">C) Metafísica</div>
+                    <div class="option">D) Confissões</div>
+                </div>
+                <div class="explanation">
+                    <div class="explanation-content">
+                        <p><span class="correct-answer">Resposta correta: C) Metafísica</span> ✅</p>
+                        <p class="explanation-text">A "Metafísica" é uma das obras fundamentais de Aristóteles, onde ele examina a natureza do ser, a substância, a causa e o efeito, e o conceito de Deus como "motor imóvel". O título foi dado posteriormente pelos editores de suas obras, significando literalmente "o que vem depois da física".</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="question" data-correct="D">
+                <div class="question-text">18. Qual destes conceitos é característico do pensamento de Epicuro?</div>
+                <div class="options">
+                    <div class="option">A) A vida deve ser dedicada exclusivamente ao Estado</div>
+                    <div class="option">B) O sofrimento é necessário para a purificação da alma</div>
+                    <div class="option">C) Devemos buscar a fama e a glória acima de tudo</div>
+                    <div class="option">D) O prazer é o princípio e o fim da vida feliz</div>
+                </div>
+                <div class="explanation">
+                    <div class="explanation-content">
+                        <p><span class="correct-answer">Resposta correta: D) O prazer é o princípio e o fim da vida feliz</span> ✅</p>
+                        <p class="explanation-text">Epicuro defendia que o prazer (especialmente os prazeres simples e duradouros) era o bem supremo, mas alertava contra os excessos. Sua filosofia pregava a moderação e a ausência de perturbação (ataraxia) como caminho para a felicidade.</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="question" data-correct="A">
+                <div class="question-text">19. Qual destas afirmações melhor representa a filosofia de São Tomás de Aquino?</div>
+                <div class="options">
+                    <div class="option">A) A razão e a fé são harmoniosas e complementares</div>
+                    <div class="option">B) A fé deve rejeitar completamente a razão humana</div>
+                    <div class="option">C) A filosofia deve substituir a teologia</div>
+                    <div class="option">D) Só a revelação divina pode levar ao conhecimento verdadeiro</div>
+                </div>
+                <div class="explanation">
+                    <div class="explanation-content">
+                        <p><span class="correct-answer">Resposta correta: A) A razão e a fé são harmoniosas e complementares</span> ✅</p>
+                        <p class="explanation-text">Tomás de Aquino buscou conciliar a filosofia aristotélica com a teologia cristã, argumentando que razão e fé não se contradizem, pois ambas vêm de Deus. Sua obra representa o ápice da síntese entre filosofia grega e pensamento cristão.</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="question" data-correct="B">
+                <div class="question-text">20. Qual destes filósofos foi o principal representante do Ceticismo antigo?</div>
+                <div class="options">
+                    <div class="option">A) Diógenes</div>
+                    <div class="option">B) Pirro</div>
+                    <div class="option">C) Zenão de Cítio</div>
+                    <div class="option">D) Epicuro</div>
+                </div>
+                <div class="explanation">
+                    <div class="explanation-content">
+                        <p><span class="correct-answer">Resposta correta: B) Pirro</span> ✅</p>
+                        <p class="explanation-text">Pirro de Élis (360-270 a.C.) é considerado o fundador do ceticismo filosófico. Ele defendia que não podemos conhecer a natureza verdadeira das coisas e que a suspensão do juízo (epoché) levaria à tranquilidade da alma (ataraxia).</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Mostrar/ocultar conteúdo com base no botão clicado
+        document.getElementById('summaryBtn').addEventListener('click', function() {
+            document.getElementById('summaryContent').classList.add('active-content');
+            document.getElementById('quizContent').classList.remove('active-content');
+            this.classList.add('active-btn');
+            document.getElementById('quizBtn').classList.remove('active-btn');
+        });
+        
+        document.getElementById('quizBtn').addEventListener('click', function() {
+            document.getElementById('quizContent').classList.add('active-content');
+            document.getElementById('summaryContent').classList.remove('active-content');
+            this.classList.add('active-btn');
+            document.getElementById('summaryBtn').classList.remove('active-btn');
+        });
+        
+        // Adiciona event listeners a todas as opções de resposta
+        document.querySelectorAll('.option').forEach(option => {
+            option.addEventListener('click', function() {
+                const question = this.closest('.question');
+                const correctAnswer = question.getAttribute('data-correct');
+                const selectedOption = this.textContent.trim().charAt(0);
+                const options = question.querySelectorAll('.option');
+                const explanation = question.querySelector('.explanation');
+                
+                // Remove todas as classes de resposta
+                options.forEach(opt => {
+                    opt.classList.remove('correct', 'incorrect');
+                });
+                
+                // Verifica se a resposta está correta
+                if (selectedOption === correctAnswer) {
+                    this.classList.add('correct');
+                } else {
+                    this.classList.add('incorrect');
+                    // Mostra qual era a resposta correta
+                    options.forEach(opt => {
+                        if (opt.textContent.trim().charAt(0) === correctAnswer) {
+                            opt.classList.add('correct');
+                        }
+                    });
+                }
+                
+                // Mostra a explicação
+                explanation.classList.add('show');
+                
+                // Rola suavemente para a explicação
+                explanation.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+            });
+        });
+    </script>
+</body>
+  </html>
